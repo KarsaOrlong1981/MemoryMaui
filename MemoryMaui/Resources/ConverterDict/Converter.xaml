@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converter="clr-namespace:MemoryMaui.Converter"
+             x:Class="MemoryMaui.Resources.converter_dict.Converter">
+    <converter:BoolInvertedConverter x:Key="BoolInvertedConverter" />
+    <converter:BoolToStrokeColorConverter x:Key="BoolToStrokeColorConverter" />
+</ResourceDictionary>

@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:dg="clr-namespace:Maui.DataGrid;assembly=Maui.DataGrid"
+             x:Class="MemoryMaui.MainPage">
+
+    <Grid>
+        <Image Source="memoback.jpg" Aspect="AspectFill"/>
+        <VerticalStackLayout IsVisible="{Binding ChoosePlayer, Converter={StaticResource BoolInvertedConverter}}" Margin="50" Spacing="30" HorizontalOptions="Center">
+            <Button Text="Neuen Spieler hinzufügen" Command="{Binding AddNewPlayerCommand}" BackgroundColor="YellowGreen" FontSize="26" WidthRequest="350" />
+           
+            <VerticalStackLayout IsVisible="{Binding CanWriteName}" Spacing="10" >
+                <Label Text="Gib deinen Namen ein " FontSize="24" TextColor="White" HorizontalTextAlignment="Center" />
+                <Entry BackgroundColor="SteelBlue" HorizontalTextAlignment="Center" FontSize="24" TextColor="White"  Text="{Binding PlayerName}" WidthRequest="300" >
+                    <Entry.Behaviors>
+                        <toolkit:EventToCommandBehavior  EventName="Completed" 
+                                            Command="{Binding NameCompletedCommand}" />
+                    </Entry.Behaviors>
+                </Entry>
+            </VerticalStackLayout>
+            <VerticalStackLayout IsVisible="{Binding IsAvatar}" Spacing="10">
+                <Label Text="Wähle einen Avatar" FontSize="24" TextColor="White" HorizontalTextAlignment="Center" />
+                <CollectionView  ItemsSource="{Binding AvatarList}" SelectionChangedCommand="{Binding AvatarChangedCommand}" SelectionMode="Single" SelectedItem="{Binding Avatar}" ItemsLayout="HorizontalList">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid WidthRequest="200" HeightRequest="220" >
+                                <Border  StrokeThickness="8" >
+                                    <Image Source="{Binding .}" HeightRequest="100"/>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+
+            <CollectionView 
+                SelectionMode="Single" 
+                SelectionChangedCommand="{Binding SelectedPlayerChangeCommand}" 
+                SelectedItem="{Binding SelectedPlayer}"
+                IsVisible="{Binding IsAvatar, Converter={StaticResource BoolInvertedConverter}}" 
+                ItemsSource="{Binding PlayerList}" 
+                ItemsLayout="HorizontalList">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid WidthRequest="200" HeightRequest="220" BackgroundColor="White" >
+                            <Border StrokeThickness="8" >
+                                <VerticalStackLayout Spacing="30">
+                                    <Label Text="{Binding Name}"  FontSize="26"  HorizontalTextAlignment="Center"  />
+                                    <Image Source="{Binding Avatar}" HeightRequest="100"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+           
+
+            <dg:DataGrid HorizontalOptions="Center" BackgroundColor="Transparent" ItemsSource="{Binding RankingList}" SelectionEnabled="False" RowHeight="70"  HeaderHeight="50" >
+                <dg:DataGrid.NoDataView>
+                    <Border Stroke="Gold" StrokeThickness="4" BackgroundColor="Red">
+                        <Label Text="Noch keine Tabelle angelegt" FontSize="26" TextColor="White" BackgroundColor="Red" HorizontalTextAlignment="Center" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                    
+                </dg:DataGrid.NoDataView>
+                <dg:DataGrid.Columns>
+                    <dg:DataGridColumn Title="Pos" PropertyName="Rank" Width="50" SortingEnabled="False" />
+                    <dg:DataGridColumn Title="Avatar" PropertyName="Avatar" Width="50" SortingEnabled="False">
+                        <dg:DataGridColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" HeightRequest="50"/>
+                            </DataTemplate>
+                           
+                        </dg:DataGridColumn.CellTemplate>
+                    </dg:DataGridColumn>
+                    <dg:DataGridColumn Title="Name" PropertyName="Name" Width="200" SortingEnabled="False"/>
+                    <dg:DataGridColumn Title="Punkte" PropertyName="Score" Width="100" SortingEnabled="False"/>
+                    <dg:DataGridColumn Title="Anzahl Spiele" PropertyName="GamesPlayed" Width="200" SortingEnabled="False"/>
+                </dg:DataGrid.Columns>
+                <dg:DataGrid.RowsBackgroundColorPalette>
+                    <dg:PaletteCollection>
+                        <Color>#F2F2F2</Color>
+                        <Color>#FFFFFF</Color>
+                    </dg:PaletteCollection>
+                </dg:DataGrid.RowsBackgroundColorPalette>
+            </dg:DataGrid>
+            <Button IsVisible="{Binding CanStartGame}" BackgroundColor="YellowGreen" HeightRequest="60" FontSize="26" Text="Spieler gegen Spieler" Command="{Binding GotoGamePageCommand}" WidthRequest="350" />
+            <Button Text="Gegen Computer spielen" Command="{Binding VersusComCommand}" HeightRequest="60" BackgroundColor="YellowGreen" FontSize="26" WidthRequest="350" />
+        </VerticalStackLayout>
+        
+        <VerticalStackLayout IsVisible="{Binding ChoosePlayer}" Spacing="40">
+            <Label Text="Wähle aktive Spieler"  FontSize="38"  HorizontalTextAlignment="Center" TextColor="White" />
+            <CollectionView 
+                HorizontalOptions="Center" 
+                SelectionMode="Multiple" 
+                SelectionChangedCommand="{Binding MultipleSelectionChangedCommand}"
+                SelectedItems="{Binding CurrentPlayer, Mode=TwoWay}"
+                ItemsSource="{Binding PlayerList}" 
+                ItemsLayout="HorizontalList">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid WidthRequest="200" HeightRequest="220" BackgroundColor="White" >
+                            <Border StrokeThickness="8" Stroke="{Binding BorderColor, Mode=TwoWay}">
+                                <VerticalStackLayout Spacing="30">
+                                    <Label Text="{Binding Name}"  FontSize="26"  HorizontalTextAlignment="Center"  />
+                                    <Image Source="{Binding Avatar}" HeightRequest="100"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button BackgroundColor="YellowGreen" HeightRequest="50" FontSize="26" Text="Starte das Spiel" Command="{Binding GotoGamePage2Command}" WidthRequest="300" />
+        </VerticalStackLayout>
+    </Grid>
+   
+
+</ContentPage>

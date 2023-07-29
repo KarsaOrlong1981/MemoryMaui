@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MemoryMaui.Pages.GamePage"
+             Title="Let's play">
+    <ScrollView>
+        <Grid >
+            <Grid HeightRequest="1100" IsVisible="{Binding GameOver}" IsClippedToBounds="True" >
+                <Image Source="memoback.jpg" Aspect="AspectFill"/>
+                <Label Text="Der Sieger ist" TextColor="White" FontSize="140"  HorizontalTextAlignment="Center"  />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="pok.png" Aspect="AspectFit"/>
+                    <Border Grid.Column="1"  Stroke="Gold" StrokeThickness="10" HeightRequest="500" WidthRequest="500" HorizontalOptions="Center" VerticalOptions="Center">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding Winner.Name}" TextColor="White"  FontSize="38"  HorizontalTextAlignment="Center"  />
+                            <Image Source="{Binding Winner.Avatar}" HeightRequest="320"/>
+                            <Label Text="{Binding Winner.Score}" TextColor="White" FontSize="38" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Image Grid.Column="2" Source="pok.png" Aspect="AspectFit"/>
+                </Grid>
+                
+            </Grid>
+           
+            <Grid IsVisible="{Binding GameOver, Converter={StaticResource BoolInvertedConverter}}" HorizontalOptions="Center" VerticalOptions="FillAndExpand" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="250" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Image Source="memoback.jpg" Aspect="AspectFill"/>
+                <CollectionView  ItemsSource="{Binding Players}" ItemsLayout="HorizontalList" >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid WidthRequest="200" HeightRequest="220" BackgroundColor="{Binding IsActive, Converter={StaticResource BoolToStrokeColorConverter}}" >
+                                <Border  Stroke="{Binding IsActive, Converter={StaticResource BoolToStrokeColorConverter}}" StrokeThickness="8" >
+                                    <VerticalStackLayout Spacing="10">
+                                        <Label Text="{Binding Name}" TextColor="White"  FontSize="26"  HorizontalTextAlignment="Center"  />
+                                        <Image Source="{Binding Avatar}" HeightRequest="100"/>
+                                        <Label Text="{Binding Score}" TextColor="White" FontSize="26" HorizontalTextAlignment="Center"/>
+                                    </VerticalStackLayout>
+
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <CollectionView Grid.Row="1" BackgroundColor="Transparent" ItemsSource="{Binding Cards}" ItemsLayout="VerticalGrid, 10" SelectionMode="Single" SelectedItem="{Binding Card}" SelectionChangedCommand="{Binding SelectionChangedCommand}" >
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid >
+                                <Border IsVisible="{Binding IsFlipped, Converter={StaticResource BoolInvertedConverter}}" StrokeThickness="2" Stroke=" Blue" Margin="10" >
+                                    <Image Source="{Binding Backside}" HeightRequest="120"  Aspect="AspectFill"  />
+                                </Border>
+                                <Border IsVisible="{Binding IsFlipped}" StrokeThickness="2" Stroke=" Blue" Margin="10" >
+                                    <Image Source="{Binding Source}" HeightRequest="120" Aspect="AspectFit"  />
+                                </Border>
+
+                            </Grid>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </Grid>
+        </Grid>
+       
+    </ScrollView>
+</ContentPage>
